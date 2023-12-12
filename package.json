@@ -1,0 +1,33 @@
+{
+  "name": "memo",
+  "type": "module",
+  "scripts": {
+    "build": "vitepress build",
+    "dev": "vitepress dev --open",
+    "lint": "eslint .",
+    "prepare": "simple-git-hooks",
+    "prettier": "prettier --write .",
+    "preview": "vitepress preview",
+    "up": "taze latest -I"
+  },
+  "devDependencies": {
+    "@ayingott/eslint-config": "^0.7.5",
+    "@ayingott/prettier-config": "^0.1.2",
+    "eslint": "^8.55.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "simple-git-hooks": "^2.9.0",
+    "taze": "^0.13.0",
+    "vitepress": "1.0.0-rc.31"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec lint-staged"
+  },
+  "lint-staged": {
+    "*": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ]
+  },
+  "prettier": "@ayingott/prettier-config"
+}
