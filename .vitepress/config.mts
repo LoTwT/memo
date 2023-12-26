@@ -5,7 +5,7 @@ export default defineConfig({
   title: "Memo",
   description: "Memo",
 
-  srcDir: "./docs",
+  srcDir: "docs",
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
