@@ -10,8 +10,8 @@
     "strict": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "include": ["**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

@@ -1,31 +1,31 @@
 import { defineConfig } from "vitepress"
+import VueDevTools from "vite-plugin-vue-devtools"
+import { nav } from "./nav"
+import { sidebar } from "./sidebar"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Memo",
-  description: "Memo",
+  title: "Ayingott's Memo",
+  description: "Ayingott's Memo",
 
   srcDir: "docs",
 
+  head: [["link", { rel: "icon", href: "/mea.jpg" }]],
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: "Home", link: "/" },
-      { text: "Examples", link: "/markdown-examples" },
-    ],
+    logo: "/mea.jpg",
 
-    sidebar: [
-      {
-        text: "Examples",
-        items: [
-          { text: "Markdown Examples", link: "/markdown-examples" },
-          { text: "Runtime API Examples", link: "/api-examples" },
-        ],
-      },
-    ],
+    nav,
 
-    socialLinks: [
-      { icon: "github", link: "https://github.com/vuejs/vitepress" },
-    ],
+    sidebar,
+
+    socialLinks: [{ icon: "github", link: "https://github.com/lotwt" }],
+  },
+
+  cleanUrls: true,
+
+  vite: {
+    plugins: [VueDevTools()],
   },
 })

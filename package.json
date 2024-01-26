@@ -18,7 +18,8 @@
     "prettier": "^3.2.4",
     "simple-git-hooks": "^2.9.0",
     "taze": "^0.13.1",
-    "vitepress": "1.0.0-rc.32",
+    "vite-plugin-vue-devtools": "^7.0.13",
+    "vitepress": "1.0.0-rc.40",
     "vue": "^3.4.15"
   },
   "simple-git-hooks": {
