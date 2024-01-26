@@ -1,16 +1,16 @@
 // https://vitepress.dev/guide/custom-theme
-import { h } from "vue"
 import DefaultTheme from "vitepress/theme"
+import Layout from "./Layout.vue"
 import type { Theme } from "vitepress"
 import "./style.css"
 
+// https://github.com/vue-macros/vue-macros/blob/main/docs/.vitepress/theme/index.ts
 export default {
   extends: DefaultTheme,
-  Layout: () => {
-    return h(DefaultTheme.Layout, null, {
-      // https://vitepress.dev/guide/extending-default-theme#layout-slots
-    })
-  },
+
+  // https://vitepress.dev/guide/extending-default-theme#layout-slots
+  Layout,
+
   // eslint-disable-next-line unused-imports/no-unused-vars
   enhanceApp({ app, router, siteData }) {
     // ...
