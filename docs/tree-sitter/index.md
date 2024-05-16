@@ -1,1 +1,1 @@
-# Tree Sitter
+# tree-sitter
