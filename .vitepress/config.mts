@@ -8,8 +8,6 @@ export default defineConfig({
   title: "Ayingott's Memo",
   description: "Ayingott's Memo",
 
-  srcDir: "docs",
-
   head: [["link", { rel: "icon", href: "/mea.jpg" }]],
 
   themeConfig: {
