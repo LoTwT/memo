@@ -12,9 +12,13 @@ export default {
   // https://vitepress.dev/guide/extending-default-theme#layout-slots
   Layout,
 
-  // @ts-expect-error unused params
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  enhanceApp({ app, router, siteData }) {
-    // ...
+  enhanceApp({ app }) {
+    const components = import.meta.glob("../../components/**/*.vue")
+    Object.keys(components).forEach((p) => {
+      components[p]().then((mod: any) => {
+        const comp = mod.default
+        app.component(comp.name, comp)
+      })
+    })
   },
 } satisfies Theme
