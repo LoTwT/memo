@@ -1,5 +1,6 @@
 import { type Plugin, defineConfig } from "vitepress"
 import VueDevTools from "vite-plugin-vue-devtools"
+import UnoCSS from "unocss/vite"
 import { nav } from "./nav"
 import { sidebar } from "./sidebar"
 
@@ -24,7 +25,7 @@ export default defineConfig({
   cleanUrls: true,
 
   vite: {
-    plugins: [VueDevTools(), SourceRedirectPlugin()],
+    plugins: [VueDevTools(), SourceRedirectPlugin(), UnoCSS()],
   },
 })
 
