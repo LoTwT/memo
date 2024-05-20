@@ -1,3 +1,14 @@
 import { createSidebar } from "."
 
-export const treeSitterSidebar = createSidebar("/tree-sitter/", [])
+export const treeSitterSidebar = createSidebar("/tree-sitter/", [
+  {
+    text: "文档翻译",
+    collapsed: false,
+    items: [
+      {
+        text: "介绍",
+        link: "/tree-sitter/docs/introduction",
+      },
+    ],
+  },
+])

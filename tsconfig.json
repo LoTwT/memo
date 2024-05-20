@@ -16,5 +16,6 @@
     "isolatedModules": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
-  }
+  },
+  "include": [".vitepress/config.mts", "**/*.ts", "**/*.vue", "**/*.md"]
 }

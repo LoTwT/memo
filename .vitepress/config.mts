@@ -1,4 +1,4 @@
-import { defineConfig } from "vitepress"
+import { type Plugin, defineConfig } from "vitepress"
 import VueDevTools from "vite-plugin-vue-devtools"
 import { nav } from "./nav"
 import { sidebar } from "./sidebar"
@@ -24,6 +24,21 @@ export default defineConfig({
   cleanUrls: true,
 
   vite: {
-    plugins: [VueDevTools()],
+    plugins: [VueDevTools(), SourceRedirectPlugin()],
   },
 })
+
+function SourceRedirectPlugin(): Plugin {
+  return {
+    name: "vitepress:source-redirect",
+    transform: (code, id) => {
+      if (id.endsWith("md")) {
+        const res = code.replaceAll("/public", "")
+        return {
+          code: res,
+          map: null,
+        }
+      }
+    },
+  }
+}
