@@ -9,6 +9,10 @@ export const treeSitterSidebar = createSidebar("/tree-sitter/", [
         text: "介绍",
         link: "/tree-sitter/docs/introduction",
       },
+      {
+        text: "使用解析器",
+        link: "/tree-sitter/docs/using-parsers",
+      },
     ],
   },
 ])
