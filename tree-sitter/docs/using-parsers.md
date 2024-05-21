@@ -1,4 +1,4 @@
-# 使用解析器
+# 使用解析器 {#using-parsers}
 
 > [Using Parsers](https://tree-sitter.github.io/tree-sitter/using-parsers)
 
@@ -8,6 +8,6 @@ Tree-sitter 的所有解析功能都是通过 C API 公开的。用高级语言�
 
 这里展示的所有 API 函数都在 [tree_sitter/api.h](https://github.com/tree-sitter/tree-sitter/blob/master/lib/include/tree_sitter/api.h) 头文件中声明和记录。您可能还需要查看[在线的 Rust API 文档](https://docs.rs/tree-sitter)，这些文档与 C API 密切对应。
 
-## 入门指南
+## 入门指南 {#getting-started}
 
-### 构建库
+### 构建库 {#building-the-library}
