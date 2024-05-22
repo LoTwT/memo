@@ -107,3 +107,43 @@ clang                                   \
 
 ./test-json-parser
 ```
+
+## 基本解析 {#basic-parsing}
+
+### 提供代码 {#providing-the-code}
+
+在上面的示例中，我们使用 ts_parser_parse_string 函数解析存储在一个简单字符串中的源代码：
+
+```c
+TSTree *ts_parser_parse_string(
+  TSParser *self,
+  const TSTree *old_tree,
+  const char *string,
+  uint32_t length
+);
+```
+
+您可能想要解析存储在自定义数据结构中的源代码，例如 [piece table](https://en.wikipedia.org/wiki/Piece_table) 或 [rope](<https://en.wikipedia.org/wiki/Rope_(data_structure)>)。在这种情况下，您可以使用更通用的 ts_parser_parse 函数：
+
+```c
+TSTree *ts_parser_parse(
+  TSParser *self,
+  const TSTree *old_tree,
+  TSInput input
+);
+```
+
+`TSInput` 结构允许您提供自己的函数，以在给定的字节偏移量和行/列位置读取一段文本。该函数可以返回以 UTF8 或 UTF16 编码的文本。该接口使您能够高效地解析存储在您自己的数据结构中的文本。
+
+```c
+typedef struct {
+  void *payload;
+  const char *(*read)(
+    void *payload,
+    uint32_t byte_offset,
+    TSPoint position,
+    uint32_t *bytes_read
+  );
+  TSInputEncoding encoding;
+} TSInput;
+```
