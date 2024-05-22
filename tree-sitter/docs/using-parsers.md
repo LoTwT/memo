@@ -147,3 +147,26 @@ typedef struct {
   TSInputEncoding encoding;
 } TSInput;
 ```
+
+### 语法节点 {#syntax-nodes}
+
+Tree-sitter 提供了一种 DOM 风格的接口，用于检查语法树。语法节点的类型是一个字符串，表示该节点代表的语法规则。
+
+```c
+const char *ts_node_type(TSNode);
+```
+
+语法节点同时以原始字节和行/列坐标的形式存储它们在源代码中的位置：
+
+```c
+uint32_t ts_node_start_byte(TSNode);
+uint32_t ts_node_end_byte(TSNode);
+
+typedef struct {
+  uint32_t row;
+  uint32_t column;
+} TSPoint;
+
+TSPoint ts_node_start_point(TSNode);
+TSPoint ts_node_end_point(TSNode);
+```
