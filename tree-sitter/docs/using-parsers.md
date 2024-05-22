@@ -170,3 +170,32 @@ typedef struct {
 TSPoint ts_node_start_point(TSNode);
 TSPoint ts_node_end_point(TSNode);
 ```
+
+### 检索节点 {#retrieving-nodes}
+
+每棵树都有一个根节点：
+
+```c
+TSNode ts_tree_root_node(const TSTree *);
+```
+
+一旦有了一个节点，您就可以访问该节点的子节点：
+
+```c
+uint32_t ts_node_child_count(TSNode);
+TSNode ts_node_child(TSNode, uint32_t);
+```
+
+您还可以访问它的兄弟节点和父节点：
+
+```c
+TSNode ts_node_next_sibling(TSNode);
+TSNode ts_node_prev_sibling(TSNode);
+TSNode ts_node_parent(TSNode);
+```
+
+这些方法都可能返回一个空节点，以表示例如某个节点没有下一个兄弟节点。您可以检查一个节点是否为空：
+
+```c
+bool ts_node_is_null(TSNode);
+```
