@@ -254,3 +254,34 @@ TSFieldId ts_language_field_id_for_name(const TSLanguage *, const char *, uint32
 ```c
 TSNode ts_node_child_by_field_id(TSNode, TSFieldId);
 ```
+
+## 高级解析 {#advanced-parsing}
+
+### 编辑 {#editing}
+
+在诸如文本编辑器之类的应用程序中，您经常需要在源代码更改后重新解析文件。Tree-sitter 设计为高效地支持此用例。有两个必要步骤。
+
+首先，您必须编辑语法树，调整其节点的范围，使它们与代码保持同步。
+
+```c
+typedef struct {
+  uint32_t start_byte;
+  uint32_t old_end_byte;
+  uint32_t new_end_byte;
+  TSPoint start_point;
+  TSPoint old_end_point;
+  TSPoint new_end_point;
+} TSInputEdit;
+
+void ts_tree_edit(TSTree *, const TSInputEdit *);
+```
+
+然后，您可以再次调用 `ts_parser_parse`，传入旧的树。这将创建一个新的树，该树在内部与旧的树共享结构。
+
+当您编辑语法树时，其节点的位置会发生变化。如果您在 `TSTree` 之外存储了任何 `TSNode` 实例，则必须使用相同的 `TSInput` 值单独更新它们的位置，以更新它们的缓存位置。
+
+```c
+void ts_node_edit(TSNode *, const TSInputEdit *);
+```
+
+`ts_node_edit` 函数仅在您在编辑树之前检索了 `TSNode` 实例，并且在编辑树之后仍想继续使用这些特定节点实例的情况下需要。通常，您只需从编辑后的树中重新获取节点，在这种情况下，不需要使用 `ts_node_edit`。
