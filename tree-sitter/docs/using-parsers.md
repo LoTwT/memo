@@ -228,3 +228,29 @@ TSNode ts_node_prev_named_sibling(TSNode);
 ```
 
 如果您使用这一组方法，语法树的功能将类似于抽象语法树。
+
+### 节点字段名称 {#node-field-names}
+
+为了使语法节点更易于分析，许多语法为特定的子节点分配了唯一的字段名称。下一页将[解释](/tree-sitter//docs/creating-parsers#using-fields)如何在您自己的语法中执行此操作。如果语法节点有字段，您可以使用字段名称访问其子节点：
+
+```c
+TSNode ts_node_child_by_field_name(
+  TSNode self,
+  const char *field_name,
+  uint32_t field_name_length
+);
+```
+
+字段也有数值 id，如果您想避免重复的字符串比较，可以使用这些 id。您可以使用 `TSLanguage` 在字符串和 id 之间进行转换：
+
+```c
+uint32_t ts_language_field_count(const TSLanguage *);
+const char *ts_language_field_name_for_id(const TSLanguage *, TSFieldId);
+TSFieldId ts_language_field_id_for_name(const TSLanguage *, const char *, uint32_t);
+```
+
+字段 id 可以用来代替字段名称使用：
+
+```c
+TSNode ts_node_child_by_field_id(TSNode, TSFieldId);
+```
