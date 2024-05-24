@@ -431,3 +431,96 @@ TSNode ts_tree_cursor_current_node(const TSTreeCursor *);
 const char *ts_tree_cursor_current_field_name(const TSTreeCursor *);
 TSFieldId ts_tree_cursor_current_field_id(const TSTreeCursor *);
 ```
+
+## 使用查询进行模式匹配 {#pattern-matching-with-queries}
+
+许多代码分析任务涉及在语法树中搜索模式。Tree-sitter 提供了一种用于表达这些模式和搜索匹配项的小型声明性语言。该语言类似于 Tree-sitter [单元测试系统](/tree-sitter/docs/creating-parsers#command-test)的格式。
+
+### 查询语法 {#query-syntax}
+
+一个查询由一个或多个模式组成，每个模式都是一个 [S 表达式](https://en.wikipedia.org/wiki/S-expression)，用于匹配语法树中一组特定的节点。要匹配给定节点的表达式由一对括号组成，其中包含两个部分：节点的类型，以及（可选）匹配节点子节点的一系列其他 S 表达式。例如，这个模式将匹配任何子节点都是 `number_literal` 节点的 `binary_expression` 节点：
+
+```lisp
+(binary_expression (number_literal) (number_literal))
+```
+
+子节点也可以省略。例如，这将匹配至少有一个子节点为 `string_literal` 节点的任何 `binary_expression`：
+
+```lisp
+(binary_expression (string_literal))
+```
+
+#### 字段 {#fields}
+
+通常，通过指定与子节点关联的[字段名称](#node-field-names)来使模式更具体是个好主意。您可以通过在子模式前加上字段名称和冒号来实现。例如，这个模式将匹配一个 `assignment_expression` 节点，其中`左子节点`是一个 `member_expression`，该 `member_expression` 的`对象`是一个 `call_expression`。
+
+```lisp
+; JavaScript / TypeScript
+(assignment_expression
+  left: (member_expression
+    object: (call_expression)))
+```
+
+```js
+func().prop = 1
+```
+
+#### 否定字段 {#negated-fields}
+
+您还可以限制一个模式，使其仅匹配缺少特定字段的节点。为此，可以在父模式内添加一个带有前缀 `!` 的字段名称。例如，以下模式将匹配没有类型参数的类声明：
+
+```lisp
+; C# / JAVA
+(class_declaration
+  name: (identifier) @class_name
+  !type_parameters)
+```
+
+```c#
+// type_parameters is the generic parameter
+class MyClass {}
+```
+
+#### 匿名节点 {#anonymous-nodes}
+
+带括号的语法仅适用于[命名节点](#named-vs-anonymous-nodes)。要匹配特定的匿名节点，需要将它们的名称写在双引号之间。例如，以下模式将匹配运算符为 `!=` 且右侧为 `null` 的任何 `binary_expression`：
+
+```lisp
+; JavaScript / TypeScript
+(binary_expression
+  operator: "!="
+  right: (null))
+```
+
+```js
+a != null
+```
+
+#### 捕获节点 {#capturing-nodes}
+
+匹配模式时，您可能希望处理模式中的特定节点。捕获允许您将名称与模式中的特定节点关联，以便您稍后可以通过这些名称引用这些节点。捕获名称写在它们所指节点之后，并以 `@` 字符开头。
+
+例如，这个模式将匹配任何将函数赋值给标识符的情况，并将名称 `the-function-name` 与该标识符关联：
+
+```lisp
+(assignment_expression
+  left: (identifier) @the-function-name
+  right: (function))
+```
+
+这个模式将匹配所有方法定义，并将名称 `the-method-name` 与方法名称关联，将名称 `the-class-name` 与包含该方法的类名关联：
+
+```lisp
+; JavaScript
+(class_declaration
+  name: (identifier) @the-class-name
+  body: (class_body
+    (method_definition
+      name: (property_identifier) @the-method-name)))
+```
+
+```js
+class MyClass {
+  myMethod() {}
+}
+```
