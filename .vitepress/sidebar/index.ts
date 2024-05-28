@@ -1,6 +1,6 @@
+import type { DefaultTheme } from "vitepress"
 import { astGrepSidebar } from "./ast-grep"
 import { treeSitterSidebar } from "./tree-sitter"
-import type { DefaultTheme } from "vitepress"
 
 export function createSidebar(
   path: string,

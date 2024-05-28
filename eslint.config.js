@@ -1,10 +1,13 @@
 // @ts-check
 
-import { defineFlatConfig } from "@ayingott/eslint-config"
+import { defineConfig } from "@ayingott/eslint-config"
 
-export default defineFlatConfig([], {
-  vue: true,
-  unocss: true,
-  prettier: true,
-  react: false,
+export default defineConfig({
+  typescript: true,
+  formatters: true,
+  markdown: true,
+  rules: {
+    "vue/singleline-html-element-content-newline": "off",
+    "style/operator-linebreak": "off",
+  },
 })

@@ -5,9 +5,12 @@ import { nextTick, provide } from "vue"
 
 const { isDark } = useData()
 
-const enableTransitions = () =>
-  "startViewTransition" in document &&
-  window.matchMedia("(prefers-reduced-motion: no-preference)").matches
+function enableTransitions() {
+  return (
+    "startViewTransition" in document &&
+    window.matchMedia("(prefers-reduced-motion: no-preference)").matches
+  )
+}
 
 provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
   if (!enableTransitions()) {
@@ -23,7 +26,7 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
     )}px at ${x}px ${y}px)`,
   ]
 
-  // @ts-expect-error
+  // @ts-expect-error compatibility
   await document.startViewTransition(async () => {
     isDark.value = !isDark.value
     await nextTick()

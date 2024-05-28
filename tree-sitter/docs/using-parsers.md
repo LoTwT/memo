@@ -539,7 +539,7 @@ class MyClass {
   name: (identifier) @the-name)
 ```
 
-```js
+```ts
 @MyDecorator
 class MyClass {}
 ```
@@ -568,7 +568,6 @@ func("s")
 ```
 
 ```js
-// comment
 function foo() {}
 ```
 
@@ -582,7 +581,7 @@ function foo() {}
 ```
 
 ```js
-1, 2, 3
+const arr = [1, 2, 3]
 ```
 
 #### 选择运算符 {#alternations}
@@ -622,6 +621,5 @@ obj.func()
 ```
 
 ```js
-function() {}
-try {}
+function foo() {}
 ```
