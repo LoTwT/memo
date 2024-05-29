@@ -12,6 +12,30 @@ export const treeSitterSidebar = createSidebar("/tree-sitter/", [
       {
         text: "使用解析器",
         link: "/tree-sitter/docs/using-parsers",
+        items: [
+          { text: "使用解析器", link: "/tree-sitter/docs/using-parsers/index" },
+          {
+            text: "入门指南",
+            link: "/tree-sitter/docs/using-parsers/getting-started",
+          },
+          {
+            text: "基本解析",
+            link: "/tree-sitter/docs/using-parsers/basic-parsing",
+          },
+          {
+            text: "高级解析",
+            link: "/tree-sitter/docs/using-parsers/advanced-parsing",
+          },
+          {
+            text: "其他树操作",
+            link: "/tree-sitter/docs/using-parsers/other-tree-operations",
+          },
+          {
+            text: "使用查询进行模式匹配",
+            link: "/tree-sitter/docs/using-parsers/pattern-matching-with-queries",
+          },
+          { text: "", link: "" },
+        ],
       },
       {
         text: "创建解析器",
