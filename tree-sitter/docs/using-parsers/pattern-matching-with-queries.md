@@ -189,3 +189,165 @@ obj.func()
 ```js
 function foo() {}
 ```
+
+### 通配符节点 {#wildcard-node}
+
+通配符节点用下划线（`_`）表示，它可以匹配任何节点。这类似于正则表达式中的 `.`。有两种类型，`(_)` 将匹配任何命名节点，而 `_` 将匹配任何命名或匿名节点。
+
+例如，以下模式将匹配调用中的任何节点：
+
+```lisp
+(call (_) @call.inner)
+```
+
+### 锚点 {#anchors}
+
+锚点运算符 `.` 用于约束子模式的匹配方式。根据其在查询中的位置不同，它有不同的行为。
+
+当 `.` 放置在父模式内的第一个子节点之前时，子节点仅在它是父节点中的第一个命名节点时才会匹配。例如，下面的模式最多匹配一次给定的 `array` 节点，将 `@the-element` 捕获分配给父 `array` 中的第一个 `identifier` 节点：
+
+```lisp
+(array . (identifier) @the-element)
+```
+
+```js
+const arr = [a, 1]
+```
+
+没有这个锚点，模式将对数组中的每个 `identifier` 匹配一次，并且 `@the-element` 会绑定到每个匹配的 `identifier`。
+
+类似地，将锚点放置在模式的最后一个子节点之后，将使该子节点模式仅匹配作为其父节点最后一个命名子节点的节点。下面的模式仅匹配在 `block` 中作为最后一个命名子节点的节点。
+
+```lisp
+(block (_) @last-expression .)
+```
+
+```c#
+{
+  int a = 1
+}
+```
+
+最后，锚点放置在两个子模式之间将使模式仅匹配紧邻的兄弟节点。下面的模式，在给定 `a.b.c.d` 这样的长点分隔名称时，只会匹配连续标识符对：`a` 和 `b`，`b` 和 `c`，以及 `c` 和 `d`。
+
+```lisp
+(dotted_name
+  (identifier) @prev-id
+  .
+  (identifier) @next-id)
+```
+
+没有锚点，非连续对（如 `a, c` 和 `b, d`）也会被匹配。
+
+锚点运算符对模式施加的限制会忽略匿名节点。
+
+### 谓词 {#predicates}
+
+您还可以通过在模式中的任意位置添加谓词 S 表达式来指定与模式关联的任意元数据和条件。谓词 S 表达式以以 `#` 字符开头的谓词名称开头。之后，它们可以包含任意数量的带 `@` 前缀的捕获名称或字符串。
+
+Tree-Sitter 的 CLI 默认支持以下谓词：
+
+#### eq?, not-eq?, any-eq?, any-not-eq?
+
+这一系列谓词允许您匹配单个捕获或字符串值。
+
+第一个参数必须是一个捕获，但第二个参数可以是一个捕获以比较两个捕获的文本，或者是一个字符串以与第一个捕获的文本进行比较。
+
+基本谓词是 `#eq?`，但其补充谓词 `#not-eq?` 可用于不匹配某个值。
+
+考虑以下针对 C 语言的示例：
+
+```lisp
+((identifier) @variable.builtin
+  (#eq? @variable.builtin "self"))
+```
+
+这个模式将匹配任何标识符为 `self` 的情况。
+
+这个模式将匹配值与键同名的标识符的键值对：
+
+```lisp
+(
+  (pair
+    key: (property_identifier) @key-name
+    value: (identifier) @value-name)
+  (#eq? @key-name @value-name)
+)
+```
+
+```js
+{
+  a: a
+}
+```
+
+前缀 "any-" 用于量化捕获。以下是一个找到一段空注释的示例：
+
+```lisp
+((comment)+ @comment.empty
+  (#any-eq? @comment.empty "//"))
+```
+
+请注意，`#any-eq?` 将在任意节点匹配谓词时匹配量化捕获，而默认情况下，量化捕获仅在所有节点都匹配谓词时才会匹配。
+
+#### match?, not-match?, any-match?, any-not-match?
+
+这些谓词类似于 `#eq?` 谓词，但它们使用正则表达式来匹配捕获的文本。
+
+例如，这个模式可以匹配名称是 `SCREAMING_SNAKE_CASE` 的标识符：
+
+```lisp
+(identifier) @id
+(#match? @id "^[A-Z_]+$")
+```
+
+```js
+const SCREAMING_SNAKE_CASE = 1
+```
+
+以下是一个查找 C 语言中潜在文档注释的示例：
+
+```lisp
+((comment)+ @comment.documentation
+  (#match? @comment.documentation "^///\\s+.*"))
+```
+
+这是另一个查找 Cgo 注释以可能注入 C 代码的示例：
+
+```lisp
+((comment)+ @injection.content
+  .
+  (import_declaration
+    (import_spec path: (interpreted_string_literal) @_import_c))
+  (#eq? @_import_c "\"C\"")
+  (#match? @injection.content "^//"))
+```
+
+#### any-of?, not-any-of?
+
+谓词 `any-of?` 允许您将捕获与多个字符串进行匹配，并且当捕获的文本等于任意一个字符串时将匹配。
+
+考虑以下针对 JavaScript 的示例：
+
+```lisp
+((identifier) @variable.builtin
+  (#any-of? @variable.builtin
+        "arguments"
+        "module"
+        "console"
+        "window"
+        "document"))
+```
+
+这将匹配 JavaScript 中的任意内置变量。
+
+注意 —— 谓词并不是由 Tree-sitter 的 C 库直接处理的。它们只是以结构化的形式暴露出来，以便更高级别的代码可以执行过滤。然而，Tree-sitter 的更高级别绑定（如 [Rust Crate](https://github.com/tree-sitter/tree-sitter/tree/master/lib/binding_rust) 或 [WebAssembly 绑定](https://github.com/tree-sitter/tree-sitter/tree/master/lib/binding_web)）确实实现了一些常见的谓词，如上面解释的 `#eq?`、`#match?` 和 `#any-of?` 谓词。
+
+总结一下 Tree-Sitter 的绑定支持的谓词：
+
+- **#eq?** 检查捕获或字符串的直接匹配。
+- **#match?** 检查正则表达式的匹配。
+- **#any-of?** 检查是否与字符串列表中的任意一个匹配。
+- 在任意这些谓词的开头添加 `not-` 将否定匹配。
+- 默认情况下，量化捕获只有在所有节点都匹配谓词时才会匹配。
+- 在 `eq` 或 `match` 谓词前添加 `any-` 将使其在任意节点匹配谓词时匹配。
