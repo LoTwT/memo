@@ -351,3 +351,62 @@ const SCREAMING_SNAKE_CASE = 1
 - 在任意这些谓词的开头添加 `not-` 将否定匹配。
 - 默认情况下，量化捕获只有在所有节点都匹配谓词时才会匹配。
 - 在 `eq` 或 `match` 谓词前添加 `any-` 将使其在任意节点匹配谓词时匹配。
+
+## 查询 API {#the-query-api}
+
+通过指定包含一个或多个模式的字符串来创建查询：
+
+```c
+TSQuery *ts_query_new(
+  const TSLanguage *language,
+  const char *source,
+  uint32_t source_len,
+  uint32_t *error_offset,
+  TSQueryError *error_type
+);
+```
+
+如果查询中存在错误，则 `error_offset` 参数将被设置为错误的字节偏移量，`error_type` 参数将被设置为指示错误类型的值：
+
+```c
+typedef enum {
+  TSQueryErrorNone = 0,
+  TSQueryErrorSyntax,
+  TSQueryErrorNodeType,
+  TSQueryErrorField,
+  TSQueryErrorCapture,
+} TSQueryError;
+```
+
+`TSQuery` 值是不可变的，可以在线程之间安全地共享。要执行查询，需要创建一个 `TSQueryCursor`，它携带处理查询所需的状态。查询光标不应在线程之间共享，但可以在多次查询执行中重用。
+
+```c
+TSQueryCursor *ts_query_cursor_new(void);
+```
+
+然后，您可以在给定的语法节点上执行查询：
+
+```c
+void ts_query_cursor_exec(TSQueryCursor *, const TSQuery *, TSNode);
+
+```
+
+然后，您可以遍历匹配结果：
+
+```c
+typedef struct {
+  TSNode node;
+  uint32_t index;
+} TSQueryCapture;
+
+typedef struct {
+  uint32_t id;
+  uint16_t pattern_index;
+  uint16_t capture_count;
+  const TSQueryCapture *captures;
+} TSQueryMatch;
+
+bool ts_query_cursor_next_match(TSQueryCursor *, TSQueryMatch *match);
+```
+
+当没有更多匹配项时，此函数将返回 false。否则，它将用匹配的模式和捕获的节点数据填充匹配项。
