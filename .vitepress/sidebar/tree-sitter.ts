@@ -34,7 +34,10 @@ export const treeSitterSidebar = createSidebar("/tree-sitter/", [
             text: "使用查询进行模式匹配",
             link: "/tree-sitter/docs/using-parsers/pattern-matching-with-queries",
           },
-          { text: "", link: "" },
+          {
+            text: "静态节点类型",
+            link: "/tree-sitter/docs/using-parsers/static-node-types",
+          },
         ],
       },
       {
