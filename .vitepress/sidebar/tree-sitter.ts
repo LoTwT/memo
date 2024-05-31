@@ -11,9 +11,9 @@ export const treeSitterSidebar = createSidebar("/tree-sitter/", [
       },
       {
         text: "使用解析器",
-        link: "/tree-sitter/docs/using-parsers",
+        link: "/tree-sitter/docs/using-parsers/intro",
         items: [
-          { text: "使用解析器", link: "/tree-sitter/docs/using-parsers/index" },
+          { text: "使用解析器", link: "/tree-sitter/docs/using-parsers/intro" },
           {
             text: "入门指南",
             link: "/tree-sitter/docs/using-parsers/getting-started",
@@ -42,7 +42,29 @@ export const treeSitterSidebar = createSidebar("/tree-sitter/", [
       },
       {
         text: "创建解析器",
-        link: "/tree-sitter/docs/creating-parsers",
+        link: "/tree-sitter/docs/creating-parsers/intro",
+        items: [
+          {
+            text: "创建解析器",
+            link: "/tree-sitter/docs/creating-parsers/intro",
+          },
+          {
+            text: "入门指南",
+            link: "/tree-sitter/docs/creating-parsers/getting-started",
+          },
+          {
+            text: "工具概述",
+            link: "/tree-sitter/docs/creating-parsers/tool-overview",
+          },
+          {
+            text: "编写语法",
+            link: "/tree-sitter/docs/creating-parsers/writing-the-grammar",
+          },
+          {
+            text: "词法分析",
+            link: "/tree-sitter/docs/creating-parsers/lexical-analysis",
+          },
+        ],
       },
     ],
   },

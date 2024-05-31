@@ -1,6 +1,6 @@
 # 使用查询进行模式匹配 {#pattern-matching-with-queries}
 
-许多代码分析任务涉及在语法树中搜索模式。Tree-sitter 提供了一种用于表达这些模式和搜索匹配项的小型声明性语言。该语言类似于 Tree-sitter [单元测试系统](/tree-sitter/docs/creating-parsers#command-test)的格式。
+许多代码分析任务涉及在语法树中搜索模式。Tree-sitter 提供了一种用于表达这些模式和搜索匹配项的小型声明性语言。该语言类似于 Tree-sitter [单元测试系统](/tree-sitter/docs/creating-parsers/tool-overview#command-test)的格式。
 
 ## 查询语法 {#query-syntax}
 

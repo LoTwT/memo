@@ -121,7 +121,7 @@ TSNode ts_node_prev_named_sibling(TSNode);
 
 ## 节点字段名称 {#node-field-names}
 
-为了使语法节点更易于分析，许多语法为特定的子节点分配了唯一的字段名称。下一页将[解释](/tree-sitter//docs/creating-parsers#using-fields)如何在您自己的语法中执行此操作。如果语法节点有字段，您可以使用字段名称访问其子节点：
+为了使语法节点更易于分析，许多语法为特定的子节点分配了唯一的字段名称。下一页将[解释](/tree-sitter/docs/creating-parsers/writing-the-grammar#using-fields)如何在您自己的语法中执行此操作。如果语法节点有字段，您可以使用字段名称访问其子节点：
 
 ```c
 TSNode ts_node_child_by_field_name(

@@ -98,9 +98,9 @@
 
 ## 超类型节点 {#supertype-nodes}
 
-在 Tree-sitter 语法中，通常有一些规则表示语法节点的抽象类别（例如“表达式”、“类型”、“声明”）。在 `grammar.js` 文件中，这些通常写作[隐藏规则](/tree-sitter/docs/creating-parsers#hiding-rules)，其定义是一个简单的[选择](/tree-sitter/docs/creating-parsers#the-grammar-dsl)，其中每个成员只是一个单一符号。
+在 Tree-sitter 语法中，通常有一些规则表示语法节点的抽象类别（例如“表达式”、“类型”、“声明”）。在 `grammar.js` 文件中，这些通常写作[隐藏规则](/tree-sitter/docs/creating-parsers/writing-the-grammar#hiding-rules)，其定义是一个简单的[选择](/tree-sitter/docs/creating-parsers/tool-overview#the-grammar-dsl)，其中每个成员只是一个单一符号。
 
-通常，隐藏规则不会在节点类型文件中提到，因为它们不会出现在语法树中。但如果您将隐藏规则添加到语法的 [`supertypes` 列表](/tree-sitter/docs/creating-parsers#the-grammar-dsl)中，它们将出现在节点类型文件中，并具有以下特殊条目：
+通常，隐藏规则不会在节点类型文件中提到，因为它们不会出现在语法树中。但如果您将隐藏规则添加到语法的 [`supertypes` 列表](/tree-sitter/docs/creating-parsers/tool-overview#the-grammar-dsl)中，它们将出现在节点类型文件中，并具有以下特殊条目：
 
 - `"subtypes"` - 一个对象数组，指定此`超类型`节点可以包含的节点类型。
 
