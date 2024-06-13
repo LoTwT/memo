@@ -19,7 +19,7 @@
 
 使用 Tree-sitter 时涉及四种主要类型的对象：语言、解析器、语法树和语法节点。在 C 语言中，它们分别被称为 `TSLanguage`、`TSParser`、`TSTree` 和 `TSNode`。
 
-- `TSLanguage` 是一个定义如何解析特定编程语言的不透明对象。每个 `TSLanguage` 的代码都是由 Tree-sitter 生成的。许多语言已经在 [Tree-sitter GitHub 组织](https://github.com/tree-sitter)的独立 Git 仓库中提供。有关如何创建新语言，请参见[下一篇](/tree-sitter/docs/creating-parsers)。
+- `TSLanguage` 是一个定义如何解析特定编程语言的不透明对象。每个 `TSLanguage` 的代码都是由 Tree-sitter 生成的。许多语言已经在 [Tree-sitter GitHub 组织](https://github.com/tree-sitter)的独立 Git 仓库中提供。有关如何创建新语言，请参见[下一篇](/tree-sitter/docs/creating-parsers/intro)。
 - `TSParser` 是一个有状态的对象，可以被分配一个 `TSLanguage`，并用于根据某些源代码生成一个 `TSTree`。
 - `TSTree` 表示整个源代码文件的语法树。它包含表示源代码结构的 `TSNode` 实例。在源代码更改时，它也可以被编辑并用于生成新的 `TSTree`。
 - `TSNode` 表示语法树中的单个节点。它跟踪在源代码中的起始和结束位置，以及与其他节点的关系，如父节点、兄弟节点和子节点。
