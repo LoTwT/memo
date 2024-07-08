@@ -210,4 +210,30 @@ console.log('Hello, world!');
 
 `tree-sitter test` 命令还会运行 `test/highlight` 文件夹中的任何语法高亮测试（如果该文件夹存在）。有关语法高亮测试的更多信息，请参见[语法高亮页面](/tree-sitter/docs/syntax-highlighting/unit-testing#unit-testing)。
 
+## Command: parse {#command-parse}
+
+您可以使用 `tree-sitter parse` 在任意文件上运行您的解析器。这将打印生成的语法树，包括节点的范围字段名称，如下所示：
+
+```lisp
+(source_file [0, 0] - [3, 0]
+  (function_declaration [0, 0] - [2, 1]
+    name: (identifier [0, 5] - [0, 9])
+    parameters: (parameter_list [0, 9] - [0, 11])
+    result: (type_identifier [0, 12] - [0, 15])
+    body: (block [0, 16] - [2, 1]
+      (return_statement [1, 2] - [1, 10]
+        (expression_list [1, 9] - [1, 10]
+          (int_literal [1, 9] - [1, 10]))))))
+```
+
+您可以将任意数量的文件路径和 glob 模式传递给 `tree-sitter parse`，它将解析所有给定的文件。如果发生任何解析错误，该命令将以非零状态码退出。您还可以使用 `--quiet` 标志防止打印语法树。此外，`--stat` 标志会打印所有处理文件的聚合解析成功/失败信息。这使得 `tree-sitter parse` 可用作辅助测试策略：您可以检查大量文件是否解析无误：
+
+```bash
+tree-sitter parse 'examples/**/*.go' --quiet --stat
+```
+
+## Command: highlight {#command-highlight}
+
+您可以使用 `tree-sitter highlight` 对任意文件进行语法高亮。这可以直接使用 ANSI 转义码将颜色输出到终端，或者生成 HTML（如果使用 `--html` 标志）。有关更多信息，请参见[语法高亮页面](/tree-sitter/docs/syntax-highlighting/intro)。
+
 ## The Grammar DSL {#the-grammar-dsl}
