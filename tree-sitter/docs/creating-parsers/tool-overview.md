@@ -236,4 +236,40 @@ tree-sitter parse 'examples/**/*.go' --quiet --stat
 
 您可以使用 `tree-sitter highlight` 对任意文件进行语法高亮。这可以直接使用 ANSI 转义码将颜色输出到终端，或者生成 HTML（如果使用 `--html` 标志）。有关更多信息，请参见[语法高亮页面](/tree-sitter/docs/syntax-highlighting/intro)。
 
-## The Grammar DSL {#the-grammar-dsl}
+## 语法 DSL {#the-grammar-dsl}
+
+以下是您可以在 `grammar.js` 中用来定义规则的内置函数的完整列表。其中一些函数的用例将在后面的章节中详细解释。
+
+- 符号（`$` 对象） - 每个语法规则都编写为一个 JavaScript 函数，参数惯例上称为 `$`。语法 `$.identifier` 用于在规则中引用另一个语法符号。名称以 `$.MISSING` 或 `$.UNEXPECTED` 开头的符号应避免使用，因为它们在 `tree-sitter test` 命令中具有特殊含义。
+- 字符串和正则表达式字面量 - 语法中的终端符号使用 JavaScript 字符串和正则表达式描述。当然，在解析过程中，Tree-sitter 实际上并不使用 JavaScript 的正则表达式引擎来评估这些正则表达式；它生成自己的正则表达式匹配逻辑，作为每个解析器的一部分。正则表达式字面量只是用作在语法中编写正则表达式的方便方式。
+- 正则表达式限制 - 目前，实际上只支持正则表达式引擎的一个子集。这是因为某些功能（如前瞻和环视断言）在 LR(1) 语法中不可行，并且某些标志对于 Tree-sitter 来说是不必要的。然而，许多功能是默认支持的：
+  - 字符类 `[abc]`
+  - 字符范围 `[a-z]`
+  - 字符集
+  - 量化符号 `*, +, ?, {n}, {n,}, {n,m}`
+  - 替代 `|`
+  - 分组 `(...)`
+  - Unicode 字符转义 `\d, \w, \s, \D, \W, \S`
+  - Unicode 属性转义
+- 序列：`seq(rule1, rule2, ...)` - 这个函数创建一个匹配多个其他规则的规则，按顺序一个接一个地匹配。这类似于在[ EBNF 表示法](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form)中简单地将多个符号写在一起。
+- 选择：`choice(rule1, rule2, ...)` - 这个函数创建一个匹配一组可能规则之一的规则。参数的顺序无关紧要。这类似于 EBNF 表示法中的 `|`（管道）运算符。
+- 重复：`repeat(rule)` - 这个函数创建一个匹配给定规则出现零次或多次的规则。这类似于 EBNF 表示法中的 `{x}`（花括号）语法。
+- 重复：`repeat1(rule)` - 这个函数创建一个匹配给定规则出现一次或多次的规则。前面的 `repeat` 规则是通过 `repeat1` 实现的，但由于其非常常用，所以单独包含。
+- 可选项：`optional(rule)` - 这个函数创建一个匹配给定规则出现零次或一次的规则。这类似于 EBNF 表示法中的 `[x]`（方括号）语法。
+- 优先级：`prec(number, rule)` - 这个函数为给定规则标记一个数值优先级，该优先级将在解析器生成时用于解决[ LR(1) 冲突](https://en.wikipedia.org/wiki/LR_parser#Conflicts_in_the_constructed_tables)。当两个规则以一种代表真实歧义或在一个前瞻符号下的局部歧义的方式重叠时，Tree-sitter 将尝试通过匹配优先级更高的规则来解决冲突。所有规则的默认优先级为零。这类似于 Yacc 语法中的[优先级指令](https://docs.oracle.com/cd/E19504-01/802-5880/6i9k05dh3/index.html)。
+- 左结合性：`prec.left([number], rule)` - 这个函数将给定规则标记为左结合（并可选地应用数值优先级）。当出现所有规则具有相同数值优先级的 LR(1) 冲突时，Tree-sitter 将参考规则的结合性。如果有一个左结合规则，Tree-sitter 将优先匹配一个更早结束的规则。这类似于 Yacc 语法中的[结合性指令](https://docs.oracle.com/cd/E19504-01/802-5880/6i9k05dh3/index.html)。
+- 右结合性：`prec.right([number], rule)` - 这个函数类似于 `prec.left`，但它指示 Tree-sitter 优先匹配一个更晚结束的规则。
+- 动态优先级：`prec.dynamic(number, rule)` - 这个函数类似于 `prec`，但给定的数值优先级是在运行时而不是在解析器生成时应用的。仅在使用语法中的 `conflicts` 字段动态处理冲突以及存在真正的歧义（多个规则正确匹配给定代码片段）时才需要这样做。在这种情况下，Tree-sitter 比较与每个规则关联的总动态优先级，并选择总优先级最高的规则。这类似于 Bison 语法中的[动态优先级指令](https://www.gnu.org/software/bison/manual/html_node/Generalized-LR-Parsing.html)。
+- 标记：`token(rule)` - 这个函数将给定规则标记为仅生成一个标记。Tree-sitter 的默认行为是将语法中的每个字符串或正则表达式字面量视为一个单独的标记。每个标记由词法分析器单独匹配，并作为树中的叶子节点返回。`token` 函数允许您使用上述函数表达一个复杂规则（而不是单个正则表达式），但仍然让 Tree-sitter 将其视为一个单独的标记。`token` 函数只接受终端规则，因此 `token($.foo)` 是无效的。您可以将其视为将字符串或正则表达式的复杂规则简化为单个标记的快捷方式。
+- 立即标记：`token.immediate(rule)` - 通常，空白（以及任何其他额外内容，如注释）在每个标记之前都是可选的。此函数表示仅在没有空白的情况下，标记才会匹配。
+- 别名：`alias(rule, name)` - 此函数使给定规则在语法树中以另一个名称出现。如果 `name` 是一个符号，如 `alias($.foo, $.bar)`，则别名规则将作为名为 `bar` 的[命名节点](/tree-sitter/docs/using-parsers/basic-parsing#named-vs-anonymous-nodes)出现。如果 `name` 是一个字符串字面量，如 `alias($.foo, 'bar')`，则别名规则将作为[匿名节点](/tree-sitter/docs/using-parsers/basic-parsing#named-vs-anonymous-nodes)出现，就像该规则已被编写为简单字符串一样。
+
+除了 `name` 和 `rules` 字段外，语法还具有一些其他可选的公共字段，这些字段会影响解析器的行为。
+
+- `extras` - 一个标记数组，这些标记可以出现在语言的任何地方。这通常用于空白字符和注释。`extras` 的默认值是接受空白字符。要显式控制空白字符，请在语法中指定 `extras: $ => []`。
+- `inline` - 一个规则名称数组，这些规则应通过用其定义的副本替换所有用法自动从语法中移除。这对于在多个地方使用但不希望在运行时创建语法树节点的规则非常有用。
+- `conflicts` - 一个包含规则名称数组的数组。每个内部数组表示语法中存在的一个 LR(1) 冲突规则集。当这些冲突在运行时发生时，Tree-sitter 将使用 GLR 算法来探索所有可能的解释。如果多个解析最终成功，Tree-sitter 将选择其对应规则具有最高总动态优先级的子树。
+- `externals` - 一个标记名称数组，这些标记可以由[外部扫描器](/tree-sitter/docs/creating-parsers/lexical-analysis#external-scanners)返回。外部扫描器允许您编写在词法分析过程中运行的自定义 C 代码，以处理无法通过正则表达式描述的词法规则（例如 Python 的缩进标记）。
+- `precedences` - 一个字符串数组的数组，其中每个字符串数组按降序定义命名优先级级别。这些名称可以在 `prec` 函数中使用，以相对于数组中的其他名称定义优先级，而不是全局定义。只能用于解析优先级，不能用于词法优先级。
+- `word` - 将匹配关键字以进行[关键字提取](/tree-sitter/docs/creating-parsers/lexical-analysis#keyword-extraction)优化的标记名称。
+- `supertypes` - 一个隐藏规则名称数组，这些规则在生成的[节点类型文件](/tree-sitter/docs/using-parsers/static-node-types#static-node-types)中应被视为“超类型”。
