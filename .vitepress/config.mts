@@ -1,7 +1,8 @@
-import { type Plugin, defineConfig } from "vitepress"
-import VueDevTools from "vite-plugin-vue-devtools"
+import type { Plugin } from "vitepress"
 import UnoCSS from "unocss/vite"
 import VueMacros from "unplugin-vue-macros/vite"
+import VueDevTools from "vite-plugin-vue-devtools"
+import { defineConfig } from "vitepress"
 import { nav } from "./nav"
 import { sidebar } from "./sidebar"
 

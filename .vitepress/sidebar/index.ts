@@ -1,7 +1,6 @@
 import type { DefaultTheme } from "vitepress"
-import { astGrepSidebar } from "./ast-grep"
-import { treeSitterSidebar } from "./tree-sitter"
 import { rustSidebar } from "./rust"
+import { treeSitterSidebar } from "./tree-sitter"
 
 export function createSidebar(
   path: string,
@@ -15,5 +14,4 @@ export function createSidebar(
 export const sidebar: DefaultTheme.Sidebar = {
   ...rustSidebar,
   ...treeSitterSidebar,
-  ...astGrepSidebar,
 }
