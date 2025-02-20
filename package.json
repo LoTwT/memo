@@ -19,7 +19,6 @@
     "@ayingott/prettier-config": "^2.0.0",
     "@iconify-json/carbon": "^1.2.7",
     "@types/node": "^22.13.4",
-    "@vue-macros/volar": "^0.30.14",
     "eslint": "^9.20.1",
     "lint-staged": "^15.4.3",
     "prettier": "^3.5.1",
@@ -27,7 +26,6 @@
     "taze": "^18.6.0",
     "typescript": "^5.7.3",
     "unocss": "^66.0.0",
-    "unplugin-vue-macros": "^2.14.2",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vitepress": "^1.6.3",
     "vue": "^3.5.13"

@@ -5,7 +5,6 @@ import Layout from "./Layout.vue"
 import "./style.css"
 import "uno.css"
 
-// https://github.com/vue-macros/vue-macros/blob/main/docs/.vitepress/theme/index.ts
 export default {
   extends: DefaultTheme,
 
