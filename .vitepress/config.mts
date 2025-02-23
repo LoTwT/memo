@@ -29,6 +29,12 @@ export default defineConfig({
 
   vite: {
     plugins: [SourceRedirectPlugin(), UnoCSS(), VueDevTools()],
+    optimizeDeps: {
+      exclude: ["@nolebase/vitepress-plugin-enhanced-readabilities/client"],
+    },
+    ssr: {
+      noExternal: ["@nolebase/vitepress-plugin-enhanced-readabilities"],
+    },
   },
 })
 

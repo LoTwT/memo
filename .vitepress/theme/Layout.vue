@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import {
+  NolebaseEnhancedReadabilitiesMenu,
+  NolebaseEnhancedReadabilitiesScreenMenu,
+} from "@nolebase/vitepress-plugin-enhanced-readabilities/client"
 import { useData } from "vitepress"
 import DefaultTheme from "vitepress/theme"
 import { nextTick, provide } from "vue"
@@ -45,6 +49,14 @@ provide("toggle-appearance", async ({ clientX: x, clientY: y }: MouseEvent) => {
 <template>
   <DefaultTheme.Layout>
     <template #home-features-after />
+
+    <template #nav-bar-content-after>
+      <NolebaseEnhancedReadabilitiesMenu />
+    </template>
+
+    <template #nav-screen-content-after>
+      <NolebaseEnhancedReadabilitiesScreenMenu />
+    </template>
   </DefaultTheme.Layout>
 </template>
 

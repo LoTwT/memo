@@ -1,0 +1,4 @@
+/* fix style error of social links */
+.VPSocialLinks.VPNavBarSocialLinks.social-links {
+  margin-right: 0;
+}
