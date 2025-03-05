@@ -1,7 +1,7 @@
 {
   "name": "memo",
   "type": "module",
-  "packageManager": "pnpm@10.4.1",
+  "packageManager": "pnpm@10.5.2",
   "scripts": {
     "build": "vitepress build",
     "dev": "vitepress dev --open --port 3333",
@@ -15,17 +15,17 @@
     "@ayingott/sucrose": "^0.0.37"
   },
   "devDependencies": {
-    "@ayingott/eslint-config": "^2.0.0",
+    "@ayingott/eslint-config": "^2.0.1",
     "@ayingott/prettier-config": "^2.0.0",
-    "@iconify-json/carbon": "^1.2.7",
-    "@nolebase/vitepress-plugin-enhanced-readabilities": "^2.14.0",
-    "@types/node": "^22.13.4",
-    "eslint": "^9.20.1",
+    "@iconify-json/carbon": "^1.2.8",
+    "@nolebase/vitepress-plugin-enhanced-readabilities": "^2.15.0",
+    "@types/node": "^22.13.9",
+    "eslint": "^9.21.0",
     "lint-staged": "^15.4.3",
-    "prettier": "^3.5.1",
+    "prettier": "^3.5.3",
     "simple-git-hooks": "^2.11.1",
     "taze": "^18.6.0",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.2",
     "unocss": "^66.0.0",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vitepress": "^1.6.3",
