@@ -9,6 +9,10 @@ export const rustSidebar = createSidebar("/rust/", [
         text: "栈",
         link: "/rust/data-structure/stack",
       },
+      {
+        text: "链表",
+        link: "/rust/data-structure/linked_list",
+      },
     ],
   },
   {
