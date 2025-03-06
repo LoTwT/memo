@@ -11,14 +11,19 @@ export const rustSidebar = createSidebar("/rust/", [
       },
       {
         text: "链表",
-        link: "/rust/data-structure/linked_list",
+        link: "/rust/data-structure/linked-list",
       },
     ],
   },
   {
     text: "算法",
     collapsed: false,
-    items: [],
+    items: [
+      {
+        text: "括号匹配",
+        link: "/rust/algorithm/par-checker",
+      },
+    ],
   },
   {
     text: "游戏开发",
