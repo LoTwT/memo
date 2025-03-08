@@ -174,7 +174,7 @@ fn main() {
 
 output:
 
-```rust
+```shell
 Enqueue error: No space available
 dequeue data: 1
 empty: false, len: 3
